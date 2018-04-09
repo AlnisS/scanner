@@ -1,0 +1,132 @@
+color[] getPixelLine(float x1, float y1, float x2, float y2, int steps, PImage img) {
+ color[] result = new color[steps];
+ img.loadPixels();
+ if(img.pixels.length != 0) {
+   for(int i = 0; i < steps; i++) {
+     float p = ((float) i) / ((float) steps - 1);
+     //println(img.pixels.length, i, p, (img.width*(((1-p)*y1)+p*y2) + ((1-p)*x1)+p*x2));
+     //uses proportion along length to crossfade x and y
+     result[i] = img.pixels[(int) (((int)(((1-p)*y1)+p*y2))*img.width + ((1-p)*x1)+p*x2)];
+   }
+ }
+ return result;
+}
+void highlightPixel(float x1, float y1, float x2, float y2, color[] line, int pos) {
+  stroke(color(0, 255, 0));
+  float p = ((float) pos) / ((float) line.length - 1);
+  rect((int) (((1-p)*x1)+p*x2)-2, (int) (((1-p)*y1)+p*y2)-2, 4, 4);
+}
+void drawPixelLine(float x1, float y1, float x2, float y2, color[] line) {
+ for(int i = 0; i < line.length; i++) {
+   float p = ((float) i) / ((float) line.length - 1);
+   set((int) (((1-p)*x1)+p*x2), (int) (((1-p)*y1)+p*y2), line[i]);
+ }
+}
+int getCenterFromEdge(ArrayList<Integer> ls, int val) {
+  int pos = ls.indexOf(val);
+  return (ls.get(pos-2)+ls.get(pos-3))/2;
+}
+ArrayList<Integer> getHorizontalEdges(PImage img, int y) {
+  ArrayList<Integer> result = new ArrayList<Integer>();
+  img.loadPixels();
+  for(int i = 1; i < img.width; i++) {
+    if(isBlack(img.pixels[y*img.width+i-1])^isBlack(img.pixels[y*img.width+i])) result.add(i);
+  }
+  return result;
+}
+void renderHorizontalArraylist(ArrayList<Integer> ls) {
+  for(int x: ls) {
+    line(x, 0, x, height-1);
+  }
+}
+ArrayList<Integer> filterArrayList(ArrayList<Integer> ls_, int err, int min) {
+  //removes values from arraylist which do not have 5 values within min/err before them
+  //assumes arraylist is sorted
+  ArrayList<Integer> ls = new ArrayList<Integer>(ls_);
+  for(int i = ls.size()-1; i >= 0; i--) {
+    int maxdiff = 0;
+    int smallest = min+1;
+    int first = 0;
+    if(i!=0) first = ls.get(i)-ls.get(i-1);
+    //print(first + "\t");
+    if(i > 4) {
+      for(int j = 1; j < 6; j++) {
+        int b = ls.get(i-j+1)-ls.get(i-j);
+        maxdiff = max(maxdiff, abs(b-first));
+        smallest = min(smallest, b);
+      }
+    } else {
+      ls.remove(i);
+    }
+    //print(maxdiff + " " + smallest + " " + ls.get(i) + "\t");
+    if(maxdiff > err || smallest < min) ls.remove(i);
+  }
+  //println("yo");
+  return ls;
+}
+
+int patternFinder(color[] line) {
+  int lba = 0; //left black accumulator
+  int mba = 0; //middle black accumulator
+  int rba = 0; //right black accumulator
+  int lwa = 0; //left white accumulator
+  int rwa = 0; //right white accumulator
+  boolean lb = false;
+    
+  for(int i = 0; i < line.length; i++) {
+    color tcol = line[i];
+    if(red(tcol)+green(tcol)+blue(tcol) > 200) {//if pixel in line is white
+      //if last pixel was black, shift white accumulaors back and start new white one at 0
+      if(lb) {
+        lwa = rwa;
+        rwa = 0;
+      }
+      //increment rightmost accumulator
+      rwa++;
+      lb = false;
+    } else {//if pixel in line is black
+      //if last pixel was white, shift black accumulators back and start new black one at 0
+      if(!lb) {
+        lba = mba;
+        mba = rba;
+        rba = 0;
+      }
+      //increment rightmost accumulator
+      rba++;
+      lb = true;
+    }
+    
+    int maxdiff = 0; //maximum difference between two accumulators
+    maxdiff = max(maxdiff, abs(lba-mba));
+    maxdiff = max(maxdiff, abs(lba-rba));
+    maxdiff = max(maxdiff, abs(lba-lwa));
+    maxdiff = max(maxdiff, abs(lwa-rwa));
+    //print(maxdiff + "\t");
+    //return if all accumulators are close to each other and they are big enough to be meaningful
+    if(maxdiff < 4 && lba > 10) {
+      color tcolb = line[i];
+      if(red(tcolb)+green(tcolb)+blue(tcolb) < 200) {
+        for(int j = 0; j<=10; j++) {
+          if(i+j >= line.length) break;
+          tcolb = line[i+j];
+          if(red(tcolb)+green(tcolb)+blue(tcolb) > 200) {
+            return marchBack(i+j, line);
+          }
+        }
+      }
+    }
+  }
+  //println(lba, mba, rba, lwa, rwa);
+  return 0;
+}
+boolean isBlack(color c) {
+  return red(c)+green(c)+blue(c) < 200;
+}
+int marchBack(int p, color[] line) {
+  p--;
+  while(isBlack(line[p])) p--;
+  while(!isBlack(line[p])) p--;
+  int x1 = p;
+  while(isBlack(line[p])) p--;
+  return (p + x1)/2;
+}
