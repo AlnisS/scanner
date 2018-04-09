@@ -53,6 +53,7 @@ void draw() {
   image(tempimg, 0, 0);
   
   stroke(color(0, 255, 0));
+  ArrayList<Integer> foundedges = new ArrayList<Integer>();
   for(int i = 0; i < height; i++) {
     //int i = 200;
     ArrayList<Integer> fulledges = getHorizontalEdges(tempimg, i);
@@ -63,12 +64,23 @@ void draw() {
     if(redge != 0) p = getCenterFromEdge(fulledges, redge);
     //line(redge, 0, redge, height-1);
     line(p, 0, p, height-1);
+    foundedges.add(p);
     //line(0, 200, width-1, 200);
     /*
     for(int it: edges) {
       line(it, 0, it, height-1);
     }
     */
+  }
+  for(int i: foundedges) {
+    ArrayList<Integer> fulledges = getVerticalEdges(tempimg, i);
+    ArrayList<Integer> edges = filterArrayList(fulledges, 2, 6);
+    int redge = 0;
+    if(edges.size() != 0) redge = edges.get(0);
+    int p = 0;
+    if(redge != 0) p = getCenterFromEdge(fulledges, redge);
+    //line(redge, 0, redge, height-1);
+    line(0, p, width-1, p);
   }
   //color[] temp = getPixelLine(mousePressedX, mousePressedY, mouseX, mouseY, 400, cam);
   //drawPixelLine(mousePressedX, mousePressedY, mouseX, mouseY, temp);

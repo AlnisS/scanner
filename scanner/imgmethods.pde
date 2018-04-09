@@ -1,3 +1,56 @@
+int getCenterFromEdge(ArrayList<Integer> ls, int val) {
+  int pos = ls.indexOf(val);
+  return (ls.get(pos-2)+ls.get(pos-3))/2;
+}
+ArrayList<Integer> getHorizontalEdges(PImage img, int y) {
+  ArrayList<Integer> result = new ArrayList<Integer>();
+  img.loadPixels();
+  for(int i = 1; i < img.width; i++) {
+    if(isBlack(img.pixels[y*img.width+i-1])^isBlack(img.pixels[y*img.width+i])) result.add(i);
+  }
+  return result;
+}
+ArrayList<Integer> getVerticalEdges(PImage img, int x) {
+  ArrayList<Integer> result = new ArrayList<Integer>();
+  img.loadPixels();
+  for(int i = 1; i < img.height; i++) {
+    if(isBlack(img.pixels[(i-1)*img.width+x])^isBlack(img.pixels[i*img.width+x])) result.add(i);
+  }
+  return result;
+}
+void renderHorizontalArraylist(ArrayList<Integer> ls) {
+  for(int x: ls) {
+    line(x, 0, x, height-1);
+  }
+}
+void renderVerticalArraylist(ArrayList<Integer> ls) {
+  for(int y: ls) {
+    line(0, y, width-1, y);
+  }
+}
+ArrayList<Integer> filterArrayList(ArrayList<Integer> ls_, int err, int min) {
+  //removes values from arraylist which do not have 5 values within min/err before them
+  //assumes arraylist is sorted
+  ArrayList<Integer> ls = new ArrayList<Integer>(ls_);
+  for(int i = ls.size()-1; i >= 0; i--) {
+    int maxdiff = 0;
+    int smallest = min+1;
+    int first = 0;
+    if(i!=0) first = ls.get(i)-ls.get(i-1);
+    if(i > 4) {
+      for(int j = 1; j < 6; j++) {
+        int b = ls.get(i-j+1)-ls.get(i-j);
+        maxdiff = max(maxdiff, abs(b-first));
+        smallest = min(smallest, b);
+      }
+    } else {
+      ls.remove(i);
+    }
+    if(maxdiff > err || smallest < min) ls.remove(i);
+  }
+  return ls;
+}
+
 color[] getPixelLine(float x1, float y1, float x2, float y2, int steps, PImage img) {
  color[] result = new color[steps];
  img.loadPixels();
@@ -22,48 +75,7 @@ void drawPixelLine(float x1, float y1, float x2, float y2, color[] line) {
    set((int) (((1-p)*x1)+p*x2), (int) (((1-p)*y1)+p*y2), line[i]);
  }
 }
-int getCenterFromEdge(ArrayList<Integer> ls, int val) {
-  int pos = ls.indexOf(val);
-  return (ls.get(pos-2)+ls.get(pos-3))/2;
-}
-ArrayList<Integer> getHorizontalEdges(PImage img, int y) {
-  ArrayList<Integer> result = new ArrayList<Integer>();
-  img.loadPixels();
-  for(int i = 1; i < img.width; i++) {
-    if(isBlack(img.pixels[y*img.width+i-1])^isBlack(img.pixels[y*img.width+i])) result.add(i);
-  }
-  return result;
-}
-void renderHorizontalArraylist(ArrayList<Integer> ls) {
-  for(int x: ls) {
-    line(x, 0, x, height-1);
-  }
-}
-ArrayList<Integer> filterArrayList(ArrayList<Integer> ls_, int err, int min) {
-  //removes values from arraylist which do not have 5 values within min/err before them
-  //assumes arraylist is sorted
-  ArrayList<Integer> ls = new ArrayList<Integer>(ls_);
-  for(int i = ls.size()-1; i >= 0; i--) {
-    int maxdiff = 0;
-    int smallest = min+1;
-    int first = 0;
-    if(i!=0) first = ls.get(i)-ls.get(i-1);
-    //print(first + "\t");
-    if(i > 4) {
-      for(int j = 1; j < 6; j++) {
-        int b = ls.get(i-j+1)-ls.get(i-j);
-        maxdiff = max(maxdiff, abs(b-first));
-        smallest = min(smallest, b);
-      }
-    } else {
-      ls.remove(i);
-    }
-    //print(maxdiff + " " + smallest + " " + ls.get(i) + "\t");
-    if(maxdiff > err || smallest < min) ls.remove(i);
-  }
-  //println("yo");
-  return ls;
-}
+
 
 int patternFinder(color[] line) {
   int lba = 0; //left black accumulator
