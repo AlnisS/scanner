@@ -35,6 +35,10 @@ void draw() {
   noStroke();
   fill(0, 0, 0, 127);
   PImage tempimg = cam.copy();
+  tempimg.loadPixels();
+  for(int i = 0; i < tempimg.pixels.length; i++) {
+    tempimg.pixels[i] = color(255*int(!isBlack(tempimg.pixels[i])));
+  }
   image(tempimg, 0, 0);
   stroke(color(0, 255, 0));
   fill(color(0, 255, 0));
