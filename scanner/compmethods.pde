@@ -28,7 +28,8 @@ ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
     if(redge != 0) p = getCenterFromEdge(fulledges, redge);
     //line(redge, 0, redge, height-1);
     //line(0, p, width-1, p);
-    if(p != 0) results.add(new PVector(i, p));
+    PVector testvector = new PVector(i, p);
+    if(p != 0 && validatePoint(tempimg, testvector)) results.add(testvector);
   }
   return results;
 }

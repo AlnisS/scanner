@@ -2,6 +2,34 @@ int getCenterFromEdge(ArrayList<Integer> ls, int val) {
   int pos = ls.indexOf(val);
   return (ls.get(pos-2)+ls.get(pos-3))/2;
 }
+boolean validatePoint(PImage img, PVector v) {
+  //fill(color(255, 0, 0));
+  //rect(v.x-2, v.y-2, 4, 4);
+  try {
+    img.loadPixels();
+    int i = 0;
+    while(isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {}
+    int j = i-1;
+    i = 0;
+    while(isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i--)])) {}
+    j -= i+1;
+    j -= 1; //makes it work better somehow
+    //line(v.x-j/2, v.y-j/2, v.x+j/2, v.y+j/2);
+    //line(v.x, v.y, v.x+2*j, v.y+2*j);
+    boolean res = !isBlack(img.pixels[int(v.y+j)*img.width+int(v.x+j)]) &&
+           isBlack(img.pixels[int(v.y+j*2)*img.width+int(v.x+j*2)]) &&
+           !isBlack(img.pixels[int(v.y-j)*img.width+int(v.x-j)]) &&
+           isBlack(img.pixels[int(v.y-j*2)*img.width+int(v.x-j++*2)]) ||
+           !isBlack(img.pixels[int(v.y+j)*img.width+int(v.x+j)]) &&
+           isBlack(img.pixels[int(v.y+j*2)*img.width+int(v.x+j*2)]) &&
+           !isBlack(img.pixels[int(v.y-j)*img.width+int(v.x-j)]) &&
+           isBlack(img.pixels[int(v.y-j*2)*img.width+int(v.x-j*2)]);
+    //if(!res) println("whoopie!");
+    return res;
+  } catch(Exception e) {
+    return false;
+  }
+}
 ArrayList<Integer> getHorizontalEdges(PImage img, int y) {
   ArrayList<Integer> result = new ArrayList<Integer>();
   img.loadPixels();
