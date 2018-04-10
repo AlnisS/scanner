@@ -17,7 +17,7 @@ boolean validatePoint(PImage img, PVector v) {
     boolean res = true;
     ellipseMode(RADIUS);
     noFill();
-    ellipse(v.x, v.y, j, j);
+    //ellipse(v.x, v.y, j, j);
     for(float r = 0; r < PI; r += PI * .05) {
       float xo = int(.5*i*cos(r));
       float yo = int(.5*i*sin(r));
