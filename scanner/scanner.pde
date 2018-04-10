@@ -31,7 +31,7 @@ void draw() {
   if (cam.available() == true) {
     cam.read();
   }
-  image(cam, 0, 0);
+  //image(cam, 0, 0);
   noStroke();
   fill(0, 0, 0, 127);
   PImage tempimg = cam.copy();
@@ -39,7 +39,8 @@ void draw() {
   //for(int i = 0; i < tempimg.pixels.length; i++) {
   //  tempimg.pixels[i] = color(255*int(!isBlack(tempimg.pixels[i])));
   //}
-  image(tempimg, 0, 0);
+  //image(tempimg, 0, 0);
+  background(0);
   stroke(color(0, 255, 0));
   fill(color(0, 255, 0));
   ArrayList<PVector> coords = getTarget(tempimg, globalerror, globalminimum);
@@ -55,6 +56,7 @@ void draw() {
   for(PVector vect: coords) {
     rect(vect.x-3, vect.y-3, 6, 6);
   }
+  PVector[] r = new PVector[4];
   if(coords.size() == 4) {
     int low = 9999;
     int lowi = 0;
@@ -81,11 +83,26 @@ void draw() {
       if(!taken[j]) break;
     }
     j++;
-    stroke(color(0, 255, 0));
+    stroke(color(0, 0, 255));
     line(coords.get(0), coords.get(lowi));
     line(coords.get(lowi), coords.get(lowbi));
     line(coords.get(lowbi), coords.get(j));
     line(coords.get(j), coords.get(0));
+    r[0]=coords.get(0);
+    r[1]=coords.get(lowi);
+    r[2]=coords.get(lowbi);
+    r[3]=coords.get(j);
+  }
+  if(r[0] != null) {
+    for(int i = 0; i < 200; i +=1) {
+      float p = float(i)/199.0;
+      println(r[0], r[1], r[2], r[3], p);
+      color[] scan = getPixelLine(fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p),
+                                  fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p), 200, tempimg);
+      //drawPixelLine(fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p),
+      //              fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p), scan);
+      drawPixelLine(0, 2*i, 400, 2*i, scan);
+    }
   }
 }
 void keyPressed() {
@@ -107,4 +124,7 @@ void mousePressed() {
 }
 void line(PVector v1, PVector v2) {
   line(v1.x, v1.y, v2.x, v2.y);
+}
+float fade(float a, float b, float p) {
+  return (1-p)*a + p*b;
 }

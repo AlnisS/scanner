@@ -91,17 +91,18 @@ ArrayList<Integer> filterArrayList(ArrayList<Integer> ls_, int err, int min) {
 }
 
 color[] getPixelLine(float x1, float y1, float x2, float y2, int steps, PImage img) {
- color[] result = new color[steps];
- img.loadPixels();
- if(img.pixels.length != 0) {
-   for(int i = 0; i < steps; i++) {
-     float p = ((float) i) / ((float) steps - 1);
-     //println(img.pixels.length, i, p, (img.width*(((1-p)*y1)+p*y2) + ((1-p)*x1)+p*x2));
-     //uses proportion along length to crossfade x and y
-     result[i] = img.pixels[(int) (((int)(((1-p)*y1)+p*y2))*img.width + ((1-p)*x1)+p*x2)];
-   }
- }
- return result;
+  println(x1, y1, x2, y2, steps);
+  color[] result = new color[steps];
+  img.loadPixels();
+  if(img.pixels.length != 0) {
+    for(int i = 0; i < steps; i++) {
+      float p = ((float) i) / ((float) steps - 1);
+      //println(img.pixels.length, i, p, (img.width*(((1-p)*y1)+p*y2) + ((1-p)*x1)+p*x2));
+      //uses proportion along length to crossfade x and y
+      result[i] = img.pixels[(int) (((int)(((1-p)*y1)+p*y2))*img.width + ((1-p)*x1)+p*x2)];
+    }
+  }
+  return result;
 }
 void highlightPixel(float x1, float y1, float x2, float y2, color[] line, int pos) {
   stroke(color(0, 255, 0));
