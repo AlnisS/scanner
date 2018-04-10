@@ -38,8 +38,10 @@ void draw() {
   image(tempimg, 0, 0);
   stroke(color(0, 255, 0));
   fill(color(0, 255, 0));
-  PVector coords = getTarget(tempimg, globalerror, globalminimum);
-  rect(coords.x-3, coords.y-3, 6, 6);
+  ArrayList<PVector> coords = getTarget(tempimg, globalerror, globalminimum);
+  for(PVector vect: coords) {
+    rect(vect.x-3, vect.y-3, 6, 6);
+  }
 }
 void keyPressed() {
   switch(key) {

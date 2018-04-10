@@ -1,5 +1,6 @@
-PVector getTarget(PImage tempimg, int error, int minimum) {
+ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
   ArrayList<Integer> foundedges = new ArrayList<Integer>();
+  ArrayList<PVector> results = new ArrayList<PVector>();
   for(int i = 0; i < height; i++) {
     //int i = 200;
     ArrayList<Integer> fulledges = getHorizontalEdges(tempimg, i);
@@ -27,7 +28,7 @@ PVector getTarget(PImage tempimg, int error, int minimum) {
     if(redge != 0) p = getCenterFromEdge(fulledges, redge);
     //line(redge, 0, redge, height-1);
     //line(0, p, width-1, p);
-    if(p != 0) return new PVector(i, p);
+    if(p != 0) results.add(new PVector(i, p));
   }
-  return new PVector(0, 0);
+  return results;
 }
