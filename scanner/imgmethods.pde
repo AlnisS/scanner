@@ -96,10 +96,10 @@ color[] getPixelLine(float x1, float y1, float x2, float y2, int steps, PImage i
   img.loadPixels();
   if(img.pixels.length != 0) {
     for(int i = 0; i < steps; i++) {
-      float p = ((float) i) / ((float) steps - 1);
+      float p = ((float) i) / ((float) steps - 1.0);
       //println(img.pixels.length, i, p, (img.width*(((1-p)*y1)+p*y2) + ((1-p)*x1)+p*x2));
       //uses proportion along length to crossfade x and y
-      result[i] = img.pixels[(int) (((int)(((1-p)*y1)+p*y2))*img.width + ((1-p)*x1)+p*x2)];
+      result[i] = img.pixels[int(int(fade(y1,y2,p))*img.width + fade(x1,x2,p))];
     }
   }
   return result;
@@ -112,7 +112,7 @@ void highlightPixel(float x1, float y1, float x2, float y2, color[] line, int po
 void drawPixelLine(float x1, float y1, float x2, float y2, color[] line) {
  for(int i = 0; i < line.length; i++) {
    float p = ((float) i) / ((float) line.length - 1);
-   set((int) (((1-p)*x1)+p*x2), (int) (((1-p)*y1)+p*y2), line[i]);
+   set(int(fade(x1,x2,p)), int(fade(y1,y2,p)), line[i]);
  }
 }
 

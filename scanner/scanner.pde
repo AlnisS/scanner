@@ -101,7 +101,10 @@ void draw() {
                                   fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p), 200, tempimg);
       //drawPixelLine(fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p),
       //              fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p), scan);
-      drawPixelLine(0, 2*i, 400, 2*i, scan);
+      drawPixelLine(0, 2*i+.01, 398.1, 2*i+.01, scan);
+      drawPixelLine(1, 2*i+.01, 399.1, 2*i+.01, scan);
+      drawPixelLine(0, 2*i+1.01, 398.1, 2*i+1.01, scan);
+      drawPixelLine(1, 2*i+1.01, 399.1, 2*i+1.01, scan);
     }
   }
 }

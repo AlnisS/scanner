@@ -1,7 +1,7 @@
 ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
   ArrayList<Integer> foundedges = new ArrayList<Integer>();
   ArrayList<PVector> results = new ArrayList<PVector>();
-  for(int i = 0; i < height; i++) {
+  for(int i = 0; i < tempimg.height; i++) {
     //int i = 200;
     ArrayList<Integer> fulledges = getHorizontalEdges(tempimg, i);
     ArrayList<Integer> edges = filterArrayList(fulledges, error, minimum);
