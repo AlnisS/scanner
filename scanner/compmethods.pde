@@ -1,3 +1,7 @@
+void drawThings(PImage tempimg) {
+  renderHorizontalArraylist(getHorizontalEdges(tempimg, mouseY));
+  renderVerticalArraylist(getVerticalEdges(tempimg, mouseX));
+}
 ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
   ArrayList<Integer> foundedges = new ArrayList<Integer>();
   ArrayList<PVector> results = new ArrayList<PVector>();

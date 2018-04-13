@@ -8,22 +8,32 @@ boolean validatePoint(PImage img, PVector v) {
   try {
     img.loadPixels();
     int i = 0;
+    
     while(isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {}
     while(!isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {}
     while(isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {}
-    int j = i/2;
+    int j = i*5/2;
     //line(v.x-j/2, v.y-j/2, v.x+j/2, v.y+j/2);
     //line(v.x, v.y, v.x+i, v.y+i);
     boolean res = true;
     ellipseMode(RADIUS);
     noFill();
     //ellipse(v.x, v.y, j, j);
-    for(float r = 0; r < PI; r += PI * .05) {
+    for(float t = 0; t < TWO_PI; t += PI * .05) {
+      float r = 0;
+      while(isBlack(img.pixels[int(v.y+r*sin(t))*img.width+int(v.x+r++*cos(t))])&&r<j) {}
+      while(!isBlack(img.pixels[int(v.y+r*sin(t))*img.width+int(v.x+r++*cos(t))])&&r<j) {}
+      while(isBlack(img.pixels[int(v.y+r*sin(t))*img.width+int(v.x+r++*cos(t))])&&r<j) {}
+      if(!(r<j)) res = false;
+      while(!isBlack(img.pixels[int(v.y+r*sin(t))*img.width+int(v.x+r++*cos(t))])&&r<j) {}
+      if(r<j) res = false;
+      /*
       float xo = int(.5*i*cos(r));
       float yo = int(.5*i*sin(r));
       if(isBlack(img.pixels[int(v.y+yo)*img.width+int(v.x+xo)])) {
         res = false;
       }
+      */
     }
     /*
     boolean res = !isBlack(img.pixels[int(v.y+j)*img.width+int(v.x+j)]) &&
@@ -91,7 +101,7 @@ ArrayList<Integer> filterArrayList(ArrayList<Integer> ls_, int err, int min) {
 }
 
 color[] getPixelLine(float x1, float y1, float x2, float y2, int steps, PImage img) {
-  println(x1, y1, x2, y2, steps);
+  //println(x1, y1, x2, y2, steps);
   color[] result = new color[steps];
   img.loadPixels();
   if(img.pixels.length != 0) {
