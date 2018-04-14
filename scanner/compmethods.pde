@@ -1,6 +1,10 @@
 void drawThings(PImage tempimg) {
+  stroke(255, 0, 0);
   renderHorizontalArraylist(getHorizontalEdges(tempimg, mouseY));
   renderVerticalArraylist(getVerticalEdges(tempimg, mouseX));
+  stroke(0, 255, 255);
+  renderHorizontalArraylist(filterArrayList(getHorizontalEdges(tempimg, mouseY), globalerror, globalminimum));
+  renderVerticalArraylist(filterArrayList(getVerticalEdges(tempimg, mouseX), globalerror, globalminimum));
 }
 ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
   ArrayList<Integer> foundedges = new ArrayList<Integer>();
@@ -9,13 +13,18 @@ ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
     //int i = 200;
     ArrayList<Integer> fulledges = getHorizontalEdges(tempimg, i);
     ArrayList<Integer> edges = filterArrayList(fulledges, error, minimum);
-    int redge = 0;
-    if(edges.size() != 0) redge = edges.get(0);
-    int p = 0;
-    if(redge != 0) p = getCenterFromEdge(fulledges, redge);
-    //line(redge, 0, redge, height-1);
-    //line(p, 0, p, height-1);
-    foundedges.add(p);
+    for(int redge: edges) {
+      //problem is that it is only doing the first edge!
+      //int redge = 0; //right edge x position
+      //if(edges.size() != 0) redge = edges.get(0);
+      int p = 0; //center of target position
+      if(redge != 0) p = getCenterFromEdge(fulledges, redge);
+      //line(redge, 0, redge, height-1);
+      //line(p, 0, p, height-1);
+      if(p != 0) {
+        foundedges.add(p);
+      }
+    }
     //line(0, 200, width-1, 200);
     /*
     for(int it: edges) {
@@ -33,7 +42,12 @@ ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
     //line(redge, 0, redge, height-1);
     //line(0, p, width-1, p);
     PVector testvector = new PVector(i, p);
-    if(p != 0 && validatePoint(tempimg, testvector)) results.add(testvector);
+    if(p != 0 && validatePoint(tempimg, testvector)) {
+      results.add(testvector);
+      stroke(255, 0, 255);
+      line(testvector.x-10, testvector.y-10, testvector.x+10, testvector.y+10);
+      line(testvector.x-10, testvector.y+10, testvector.x+10, testvector.y-10);
+    }
   }
   return results;
 }

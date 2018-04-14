@@ -5,7 +5,7 @@ Capture cam;
 float mousePressedX = 1;
 float mousePressedY = 1;
 int globalerror = 7;
-int globalminimum = 3;
+int globalminimum = 2;
 void setup() {
   size(1280, 720);
 

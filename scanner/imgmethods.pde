@@ -5,6 +5,10 @@ int getCenterFromEdge(ArrayList<Integer> ls, int val) {
 boolean validatePoint(PImage img, PVector v) {
   //fill(color(255, 0, 0));
   //rect(v.x-2, v.y-2, 4, 4);
+  ellipseMode(RADIUS);
+  noFill();
+  stroke(255, 255, 0);
+  //ellipse(v.x, v.y, 2, 2);
   try {
     img.loadPixels();
     int i = 0;
@@ -16,8 +20,8 @@ boolean validatePoint(PImage img, PVector v) {
     //line(v.x-j/2, v.y-j/2, v.x+j/2, v.y+j/2);
     //line(v.x, v.y, v.x+i, v.y+i);
     boolean res = true;
-    ellipseMode(RADIUS);
-    noFill();
+    //ellipseMode(RADIUS);
+    //noFill();
     //ellipse(v.x, v.y, j, j);
     for(float t = 0; t < TWO_PI; t += PI * .05) {
       float r = 0;
@@ -182,7 +186,7 @@ int patternFinder(color[] line) {
   return 0;
 }
 boolean isBlack(color c) {
-  return red(c)+green(c)+blue(c) < 200;
+  return red(c)+green(c)+blue(c) < 230;
 }
 int marchBack(int p, color[] line) {
   p--;
