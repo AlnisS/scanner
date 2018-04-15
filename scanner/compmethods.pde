@@ -35,18 +35,18 @@ ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
   for(int i: foundedges) {
     ArrayList<Integer> fulledges = getVerticalEdges(tempimg, i);
     ArrayList<Integer> edges = filterArrayList(fulledges, error, minimum);
-    int redge = 0;
-    if(edges.size() != 0) redge = edges.get(0);
-    int p = 0;
-    if(redge != 0) p = getCenterFromEdge(fulledges, redge);
-    //line(redge, 0, redge, height-1);
-    //line(0, p, width-1, p);
-    PVector testvector = new PVector(i, p);
-    if(p != 0 && validatePoint(tempimg, testvector)) {
-      results.add(testvector);
-      stroke(255, 0, 255);
-      line(testvector.x-10, testvector.y-10, testvector.x+10, testvector.y+10);
-      line(testvector.x-10, testvector.y+10, testvector.x+10, testvector.y-10);
+    for(int redge: edges) {
+      int p = 0;
+      if(redge != 0) p = getCenterFromEdge(fulledges, redge);
+      //line(redge, 0, redge, height-1);
+      //line(0, p, width-1, p);
+      PVector testvector = new PVector(i, p);
+      if(p != 0 && validatePoint(tempimg, testvector)) {
+        results.add(testvector);
+        stroke(255, 0, 255);
+        line(testvector.x-10, testvector.y-10, testvector.x+10, testvector.y+10);
+        line(testvector.x-10, testvector.y+10, testvector.x+10, testvector.y-10);
+      }
     }
   }
   return results;

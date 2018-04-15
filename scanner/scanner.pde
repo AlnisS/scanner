@@ -28,17 +28,19 @@ void setup() {
 }
 
 void draw() {
-  if (cam.available() == true) {
+  if (cam.available() == true && !keyPressed) {
     cam.read();
   }
   //image(cam, 0, 0);
   noStroke();
   fill(0, 0, 0, 127);
   PImage tempimg = cam.copy();
-  //tempimg.loadPixels();
-  //for(int i = 0; i < tempimg.pixels.length; i++) {
-  //  tempimg.pixels[i] = color(255*int(!isBlack(tempimg.pixels[i])));
-  //}
+  tempimg.loadPixels();
+  if(mousePressed) {
+    for(int i = 0; i < tempimg.pixels.length; i++) {
+    tempimg.pixels[i] = color(255*int(!isBlack(tempimg.pixels[i])));
+    }
+  }
   image(tempimg, 0, 0);
   //background(0);
   stroke(color(0, 255, 0));
@@ -203,20 +205,20 @@ void draw() {
     */
   }
   if(r[0] != null) {
-    for(int i = 0; i < 200; i +=1) {
-      float p = float(i)/199.0;
+    for(int i = 0; i < 400; i +=1) {
+      float p = float(i)/399.0;
       //println(r[0], r[1], r[2], r[3], p);
       color[] scan = getPixelLine(fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p),
-                                  fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p), 200, tempimg);
+                                  fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p), 400, tempimg);
       //drawPixelLine(fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p),
       //              fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p), scan);
-      drawPixelLine(0, 2*i+.01, 398.1, 2*i+.01, scan);
+      drawPixelLine(0, i+.01, 398.1, i+.01, scan);
       //drawPixelLine(1, 2*i+.01, 399.1, 2*i+.01, scan);
       //drawPixelLine(0, 2*i+1.01, 398.1, 2*i+1.01, scan);
       //drawPixelLine(1, 2*i+1.01, 399.1, 2*i+1.01, scan);
     }
   }
-  //drawThings(tempimg);
+  if(mousePressed) drawThings(tempimg);
 }
 void keyPressed() {
   switch(key) {
