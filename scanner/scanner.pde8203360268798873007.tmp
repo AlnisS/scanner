@@ -51,7 +51,7 @@ void draw() {
       PVector vectb = coords.get(j);
       if(vect != vectb && vect.dist(vectb) < 10) {
         closePoints.add(coords.remove(j));
-        j--;
+        break;
       }
     }
     closePoints.add(vect);
@@ -75,61 +75,6 @@ void draw() {
   PVector[] r = new PVector[4];
   text(coords.size(), 10, 10);
   if(coords.size() == 4) {
-    int low = 9999;
-    int lowi = 0;
-    int lowb = 9999;
-    int lowbi = 0;
-    for(int i = 0; i < 4; i++) {
-      if(coords.get(i).y < low) {
-        lowi = i;
-        low = int(coords.get(i).y);
-      }
-    }
-    for(int i = 0; i < 4; i++) {
-      if(coords.get(i).y < lowb && i != lowi) {
-        lowbi = i;
-        lowb = int(coords.get(i).y);
-      }
-    }
-    println(coords.get(lowi).y);
-    if(coords.get(lowi).x > coords.get(lowbi).x) {
-      r[0] = coords.get(lowi);
-      r[1] = coords.get(lowbi);
-    } else {
-      r[0] = coords.get(lowbi);
-      r[1] = coords.get(lowi);
-    }
-    boolean[] taken = {false, false, false, false};
-    taken[lowi] = true;
-    taken[lowbi] = true;
-    for(int i = 0; i < 4; i++) {
-      if(!taken[i]) {
-        lowi = i;
-        i++;
-        for(;i < 4; i++) {
-          if(!taken[i]) {
-            lowbi = i;
-            i = 4;
-          }
-        }
-      }
-    }
-    if(coords.get(lowi).x > coords.get(lowbi).x) {
-      r[3] = coords.get(lowi);
-      r[2] = coords.get(lowbi);
-    } else {
-      r[3] = coords.get(lowbi);
-      r[2] = coords.get(lowi);
-    }
-    for(int i = 0; i < 4; i++) {
-      print(i, r[i].x, r[i].y, " ");
-    }
-    println(" ");
-    stroke(0, 0, 255);
-    for(int i = 0; i < 4; i++) {
-      line(r[i], r[i%4]);
-    }
-    /*
     int low = 9999;
     int lowi = 0;
     int lowb = 9999;
@@ -200,7 +145,6 @@ void draw() {
     for(int i = 0; i < 4; i++) {
       text(i, r[i].x, r[i].y);
     }
-    */
   }
   if(r[0] != null) {
     for(int i = 0; i < 200; i +=1) {
