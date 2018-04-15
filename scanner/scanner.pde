@@ -205,18 +205,20 @@ void draw() {
     */
   }
   if(r[0] != null) {
-    for(int i = 0; i < 400; i +=1) {
-      float p = float(i)/399.0;
-      //println(r[0], r[1], r[2], r[3], p);
-      color[] scan = getPixelLine(fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p),
-                                  fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p), 400, tempimg);
-      //drawPixelLine(fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p),
-      //              fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p), scan);
-      drawPixelLine(0, i+.01, 398.1, i+.01, scan);
-      //drawPixelLine(1, 2*i+.01, 399.1, 2*i+.01, scan);
-      //drawPixelLine(0, 2*i+1.01, 398.1, 2*i+1.01, scan);
-      //drawPixelLine(1, 2*i+1.01, 399.1, 2*i+1.01, scan);
-    }
+    //for(int i = 0; i < 400; i +=1) {
+    //  float p = float(i)/399.0;
+    //  //println(r[0], r[1], r[2], r[3], p);
+    //  color[] scan = getPixelLine(fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p),
+    //                              fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p), 400, tempimg);
+    //  //drawPixelLine(fade(r[0].x, r[3].x, p), fade(r[0].y, r[3].y, p),
+    //  //              fade(r[1].x, r[2].x, p), fade(r[1].y, r[2].y, p), scan);
+    //  drawPixelLine(0, i+.01, 398.1, i+.01, scan);
+    //  //drawPixelLine(1, 2*i+.01, 399.1, 2*i+.01, scan);
+    //  //drawPixelLine(0, 2*i+1.01, 398.1, 2*i+1.01, scan);
+    //  //drawPixelLine(1, 2*i+1.01, 399.1, 2*i+1.01, scan);
+    //}
+    PImage t = generateUndistort(tempimg, r);
+    image(t, 0, 0);
   }
   if(mousePressed) drawThings(tempimg);
 }

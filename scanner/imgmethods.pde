@@ -1,3 +1,24 @@
+PImage generateUndistort(PImage img, PVector[] b) {
+  PImage result = createImage(400, 400, RGB);
+  result.loadPixels();
+  for(int i = 0; i < 400; i++) {
+    float p = float(i)/399.0;
+    //println(p);
+    color[] scan = getPixelLine(fade(b[1].x, b[2].x, p), fade(b[1].y, b[2].y, p),
+                                fade(b[0].x, b[3].x, p), fade(b[0].y, b[3].y, p), 400, img);
+    for(int j = 0; j < 400; j++) {
+      result.pixels[i*400 + j] = scan[j];
+    }
+    //drawPixelLine(0, i+.01, 398.1, i+.01, scan);
+  }
+  result.updatePixels();
+  return result;
+}
+
+//boolean getBubbleState(PImage img, PVector bp) {
+  
+//}
+
 int getCenterFromEdge(ArrayList<Integer> ls, int val) {
   int pos = ls.indexOf(val);
   return (ls.get(pos-2)+ls.get(pos-3))/2;
