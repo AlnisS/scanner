@@ -4,6 +4,8 @@ Capture cam;
 
 float mousePressedX = 1;
 float mousePressedY = 1;
+float tbx = 400*14.5/18;
+float tby = 400*9.5/12;
 int globalerror = 7;
 int globalminimum = 2;
 void setup() {
@@ -38,7 +40,7 @@ void draw() {
   tempimg.loadPixels();
   if(mousePressed) {
     for(int i = 0; i < tempimg.pixels.length; i++) {
-    tempimg.pixels[i] = color(255*int(!isBlack(tempimg.pixels[i])));
+    tempimg.pixels[i] = color(255*int(!isShaded(tempimg.pixels[i])));
     }
   }
   image(tempimg, 0, 0);
@@ -75,7 +77,7 @@ void draw() {
     rect(vect.x-3, vect.y-3, 6, 6);
   }
   PVector[] r = new PVector[4];
-  text(coords.size(), 10, 10);
+  //text(coords.size(), 10, 10);
   if(coords.size() == 4) {
     int low = 9999;
     int lowi = 0;
@@ -93,7 +95,7 @@ void draw() {
         lowb = int(coords.get(i).y);
       }
     }
-    println(coords.get(lowi).y);
+    //println(coords.get(lowi).y);
     if(coords.get(lowi).x > coords.get(lowbi).x) {
       r[0] = coords.get(lowi);
       r[1] = coords.get(lowbi);
@@ -124,9 +126,9 @@ void draw() {
       r[2] = coords.get(lowi);
     }
     for(int i = 0; i < 4; i++) {
-      print(i, r[i].x, r[i].y, " ");
+      //print(i, r[i].x, r[i].y, " ");
     }
-    println(" ");
+    //println(" ");
     stroke(0, 0, 255);
     for(int i = 0; i < 4; i++) {
       line(r[i], r[i%4]);
@@ -204,6 +206,7 @@ void draw() {
     }
     */
   }
+  PImage t = createImage(1, 1, RGB);
   if(r[0] != null) {
     //for(int i = 0; i < 400; i +=1) {
     //  float p = float(i)/399.0;
@@ -217,13 +220,24 @@ void draw() {
     //  //drawPixelLine(0, 2*i+1.01, 398.1, 2*i+1.01, scan);
     //  //drawPixelLine(1, 2*i+1.01, 399.1, 2*i+1.01, scan);
     //}
-    PImage t = generateUndistort(tempimg, r);
+    t = generateUndistort(tempimg, r);
     image(t, 0, 0);
   }
   if(mousePressed) drawThings(tempimg);
+  text(mouseX, 10, 10);
+  text(mouseY, 10, 20);
+  //if(t.width != 1) text(int(getBubbleState(t, new PVector(345, 25))), 10, 30);
+  line(tbx, tby-5, tbx, tby+5);
+  line(tbx-5, tby, tbx+5, tby);
+  if(t.width != 1 && getBubbleState(t, new PVector(tbx, tby))) {
+    stroke(0, 255, 0);
+    fill(0, 0, 255);
+    rect(500, 50, 50, 50);
+  }
 }
 void keyPressed() {
   switch(key) {
+    /*
     case 'q': globalerror++;
               break;
     case 'a': globalerror--;
@@ -232,8 +246,18 @@ void keyPressed() {
               break;
     case 's': globalminimum--;
               break;
+    */
+    case 'w': tby--;
+              break;
+    case 's': tby++;
+              break;
+    case 'a': tbx--;
+              break;
+    case 'd': tbx++;
+              break;
   }
-  println(globalerror, globalminimum);
+  //println(globalerror, globalminimum);
+  println(tbx, tby);
 }
 void mousePressed() {
   mousePressedX = mouseX;

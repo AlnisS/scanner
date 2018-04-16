@@ -15,9 +15,9 @@ PImage generateUndistort(PImage img, PVector[] b) {
   return result;
 }
 
-//boolean getBubbleState(PImage img, PVector bp) {
-  
-//}
+boolean getBubbleState(PImage img, PVector bp) {
+  return isShaded(img.get(int(bp.x), int(bp.y)));
+}
 
 int getCenterFromEdge(ArrayList<Integer> ls, int val) {
   int pos = ls.indexOf(val);
@@ -207,7 +207,10 @@ int patternFinder(color[] line) {
   return 0;
 }
 boolean isBlack(color c) {
-  return red(c)+green(c)+blue(c) < 230;
+  return red(c)+green(c)+blue(c) < 230; //230
+}
+boolean isShaded(color c) {
+  return red(c)+green(c)+blue(c) < 300; 
 }
 int marchBack(int p, color[] line) {
   p--;
