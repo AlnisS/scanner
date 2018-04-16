@@ -2,6 +2,9 @@ import processing.video.*;
 
 Capture cam;
 
+Bubble bubbles[];
+Table bubbleTemplate;
+
 float mousePressedX = 1;
 float mousePressedY = 1;
 float tbx = 400*14.5/18;
@@ -11,6 +14,16 @@ int globalminimum = 2;
 void setup() {
   size(1280, 720);
   //delay(10000);
+  println(sheetToCameraSpace(new PVector(14, 9)).x, sheetToCameraSpace(new PVector(14, 9)).y);
+  bubbleTemplate = loadTable("bubbles.csv", "header");
+  
+  bubbles = new Bubble[bubbleTemplate.getRowCount()];
+  
+  for(int i = 0; i < bubbleTemplate.getRowCount(); i++) {
+    TableRow row = bubbleTemplate.getRow(i);
+    bubbles[i] = new Bubble(row);
+  }
+  
   String[] cameras = Capture.list();
   
   if (cameras.length == 0) {
@@ -227,6 +240,7 @@ void draw() {
   text(mouseX, 10, 10);
   text(mouseY, 10, 20);
   //if(t.width != 1) text(int(getBubbleState(t, new PVector(345, 25))), 10, 30);
+  /*
   line(tbx, tby-5, tbx, tby+5);
   line(tbx-5, tby, tbx+5, tby);
   if(t.width != 1 && getBubbleState(t, new PVector(tbx, tby))) {
@@ -234,6 +248,21 @@ void draw() {
     fill(0, 0, 255);
     rect(500, 50, 50, 50);
   }
+  */
+  noStroke();
+  ellipseMode(RADIUS);
+  if(t.width != 1) {
+    for(Bubble b: bubbles) {
+      if(getBubbleState(t, b)) {
+        fill(0, 255, 0);
+        ellipse(sheetToCameraSpace(b.pos).x, sheetToCameraSpace(b.pos).y, 2, 2);
+      } else {
+        fill(255, 0, 0);
+        ellipse(sheetToCameraSpace(b.pos).x, sheetToCameraSpace(b.pos).y, 2, 2);
+      }
+    }
+  }
+  
 }
 void keyPressed() {
   switch(key) {

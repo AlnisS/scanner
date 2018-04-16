@@ -1,3 +1,15 @@
+class Bubble {
+  PVector pos;
+  String cat;
+  int val;
+  Bubble(TableRow bd) {
+    this.pos = new PVector();
+    this.pos.x = bd.getFloat("x");
+    this.pos.y = bd.getFloat("y");
+    this.cat = bd.getString("category");
+    this.val = bd.getInt("value");
+  }
+}
 void drawThings(PImage tempimg) {
   stroke(255, 0, 0);
   renderHorizontalArraylist(getHorizontalEdges(tempimg, mouseY));

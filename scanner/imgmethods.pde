@@ -1,3 +1,11 @@
+boolean getBubbleState(PImage img, Bubble b) {
+  PVector cpos = sheetToCameraSpace(b.pos);
+  return getBubbleState(img, cpos);
+}
+PVector sheetToCameraSpace(PVector v) {
+  return new PVector((v.x+.5)*400/18, (v.y+.5)*400/12);
+}
+
 PImage generateUndistort(PImage img, PVector[] b) {
   PImage result = createImage(400, 400, RGB);
   result.loadPixels();
