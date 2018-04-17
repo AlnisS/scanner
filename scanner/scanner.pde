@@ -6,6 +6,7 @@ Bubble bubbles[];
 Table bubbleTemplate;
 Table bubbleStates;
 
+int saveAlpha = 0;
 boolean ready = false;
 float mousePressedX = 1;
 float mousePressedY = 1;
@@ -267,12 +268,12 @@ void draw() {
   */
   noStroke();
   ellipseMode(RADIUS);
-  if(t.width != 1 && ready) {
-    bubbleStates.addRow();
+  if(t.width != 1) {
+    if(ready) bubbleStates.addRow();
     for(int i = 0; i < bubbles.length; i++) {
       Bubble b = bubbles[i];
-      bubbleStates.setInt(scansDone, i, int(getBubbleState(t, b)));
-      /*
+      if(ready) bubbleStates.setInt(scansDone, i, int(getBubbleState(t, b)));
+      
       if(getBubbleState(t, b)) {
         fill(0, 255, 0);
         ellipse(sheetToCameraSpace(b.pos).x, sheetToCameraSpace(b.pos).y, 2, 2);
@@ -280,13 +281,18 @@ void draw() {
         fill(255, 0, 0);
         ellipse(sheetToCameraSpace(b.pos).x, sheetToCameraSpace(b.pos).y, 2, 2);
       }
-      */
+      
+    }
+    if(ready){
+      scansDone++;
+      saveTable(bubbleStates, "data/bubblestates.csv");
+      println("saved! " + scansDone);
     }
     ready = false;
-    scansDone++;
-    saveTable(bubbleStates, "bubbleStates.csv");
   }
-  
+  //background(255, 255-saveAlpha);
+  //saveAlpha -= 50;
+  //if(saveAlpha < 0) saveAlpha = 0;
 }
 void keyPressed() {
   switch(key) {
@@ -309,6 +315,7 @@ void keyPressed() {
     case 'd': tbx++;
               break;
     case 'g': ready = true;
+              //saveAlpha = 255;
               break;
   }
   //println(globalerror, globalminimum);
