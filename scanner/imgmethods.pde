@@ -6,6 +6,19 @@ PVector sheetToCameraSpace(PVector v) {
   return new PVector((v.x+.5)*400/18, (v.y+.5)*400/12);
 }
 
+void coolLines(PVector[] b) {
+  for(int i = 0; i < 13; i++) {
+    float p = float(i)/12;
+    line(fade(b[1].x, b[2].x, p), fade(b[1].y, b[2].y, p),
+         fade(b[0].x, b[3].x, p), fade(b[0].y, b[3].y, p));
+  }
+  for(int i = 0; i < 19; i++) {
+    float p = float(i)/18;
+    line(fade(b[0].x, b[1].x, p), fade(b[0].y, b[1].y, p),
+         fade(b[3].x, b[2].x, p), fade(b[3].y, b[2].y, p));
+  }
+}
+
 PImage generateUndistort(PImage img, PVector[] b) {
   PImage result = createImage(400, 400, RGB);
   result.loadPixels();

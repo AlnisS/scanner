@@ -6,8 +6,8 @@ class Bubble {
     this.pos = new PVector();
     this.pos.x = bd.getFloat("x");
     this.pos.y = bd.getFloat("y");
-    this.cat = bd.getString("category");
-    this.val = bd.getInt("value");
+    //this.cat = bd.getString("category");
+    //this.val = bd.getInt("value");
   }
 }
 void drawThings(PImage tempimg) {
@@ -63,3 +63,29 @@ ArrayList<PVector> getTarget(PImage tempimg, int error, int minimum) {
   }
   return results;
 }
+
+/*
+null,1,14,2
+null,0,13,2
+null,0,4,0
+null,0,5,0
+null,0,6,0
+null,0,7,0
+null,0,8,0
+null,0,9,0
+null,0,10,0
+null,0,11,0
+null,0,12,0
+null,0,13,0
+null,0,14,0
+null,0,14,1
+null,0,14,3
+null,0,14,4
+null,0,14,5
+null,0,14,6
+null,0,14,7
+null,0,14,8
+null,0,14,9
+null,0,14,10
+null,0,14,11
+*/

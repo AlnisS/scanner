@@ -4,18 +4,33 @@ Capture cam;
 
 Bubble bubbles[];
 Table bubbleTemplate;
+Table bubbleStates;
 
+boolean ready = false;
 float mousePressedX = 1;
 float mousePressedY = 1;
 float tbx = 400*14.5/18;
 float tby = 400*9.5/12;
 int globalerror = 7;
 int globalminimum = 2;
+int scansDone = 0;
+
 void setup() {
   size(1280, 720);
   //delay(10000);
   println(sheetToCameraSpace(new PVector(14, 9)).x, sheetToCameraSpace(new PVector(14, 9)).y);
   bubbleTemplate = loadTable("bubbles.csv", "header");
+  
+  bubbleStates = new Table();
+  for(int i = 0; i < bubbleTemplate.getRowCount(); i++) {
+    bubbleStates.addColumn();
+  }
+  
+  //bubbleStates.addRow();
+  //bubbleStates.addRow();
+  //bubbleStates.setInt(1,0,2);
+  //saveTable(bubbleStates, "bst.csv");
+  
   
   bubbles = new Bubble[bubbleTemplate.getRowCount()];
   
@@ -66,7 +81,7 @@ void draw() {
     ArrayList<PVector> closePoints = new ArrayList<PVector>();
     for(int j = i+1; j < coords.size(); j++) {
       PVector vectb = coords.get(j);
-      if(vect != vectb && vect.dist(vectb) < 10) {
+      if(vect != vectb && vect.dist(vectb) < 15) {
         closePoints.add(coords.remove(j));
         j--;
       }
@@ -235,6 +250,7 @@ void draw() {
     //}
     t = generateUndistort(tempimg, r);
     image(t, 0, 0);
+    coolLines(r);
   }
   if(mousePressed) drawThings(tempimg);
   text(mouseX, 10, 10);
@@ -251,8 +267,12 @@ void draw() {
   */
   noStroke();
   ellipseMode(RADIUS);
-  if(t.width != 1) {
-    for(Bubble b: bubbles) {
+  if(t.width != 1 && ready) {
+    bubbleStates.addRow();
+    for(int i = 0; i < bubbles.length; i++) {
+      Bubble b = bubbles[i];
+      bubbleStates.setInt(scansDone, i, int(getBubbleState(t, b)));
+      /*
       if(getBubbleState(t, b)) {
         fill(0, 255, 0);
         ellipse(sheetToCameraSpace(b.pos).x, sheetToCameraSpace(b.pos).y, 2, 2);
@@ -260,7 +280,11 @@ void draw() {
         fill(255, 0, 0);
         ellipse(sheetToCameraSpace(b.pos).x, sheetToCameraSpace(b.pos).y, 2, 2);
       }
+      */
     }
+    ready = false;
+    scansDone++;
+    saveTable(bubbleStates, "bubbleStates.csv");
   }
   
 }
@@ -283,6 +307,8 @@ void keyPressed() {
     case 'a': tbx--;
               break;
     case 'd': tbx++;
+              break;
+    case 'g': ready = true;
               break;
   }
   //println(globalerror, globalminimum);
