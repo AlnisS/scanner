@@ -8,18 +8,20 @@ Table bubbleStates;
 Table outData;
 Table scoreIDs;
 
+float flashAlpha = 0;
+String input;
 int saveAlpha = 0;
 boolean ready = false;
 float mousePressedX = 1;
 float mousePressedY = 1;
 float tbx = 400*14.5/18;
 float tby = 400*9.5/12;
-int globalerror = 7;
+int globalerror = 3; //originally 7
 int globalminimum = 2;
 int scansDone = 0;
 
 void setup() {
-  size(1280, 720);
+  size(1120, 500);
   //delay(10000);
   println(sheetToCameraSpace(new PVector(14, 9)).x, sheetToCameraSpace(new PVector(14, 9)).y);
   bubbleTemplate = loadTable("bubbles.csv", "header");
@@ -28,6 +30,7 @@ void setup() {
   for(int i = 0; i < bubbleTemplate.getRowCount(); i++) {
     bubbleStates.addColumn();
   }
+  input = "";
   setupOut();
   //bubbleStates.addRow();
   //bubbleStates.addRow();
@@ -55,13 +58,17 @@ void setup() {
     
     // The camera can be initialized directly using an 
     // element from the array returned by list():
-    cam = new Capture(this, cameras[10]);
+    cam = new Capture(this, cameras[0]);
     cam.start();     
   }      
 }
 
 void draw() {
-  if (cam.available() == true && !keyPressed) {
+  //background(0);
+  noStroke();
+  fill(0);
+  rect(0,480,width,20);
+  if (cam.available() == true) {
     cam.read();
   }
   //image(cam, 0, 0);
@@ -237,6 +244,9 @@ void draw() {
     }
     */
   }
+  noStroke();
+  fill(0.,127.);
+  rect(640,0,480,480);
   PImage t = createImage(1, 1, RGB);
   if(r[0] != null) {
     //for(int i = 0; i < 400; i +=1) {
@@ -252,7 +262,9 @@ void draw() {
     //  //drawPixelLine(1, 2*i+1.01, 399.1, 2*i+1.01, scan);
     //}
     t = generateUndistort(tempimg, r);
-    image(t, 0, 0);
+    PImage dspt = t.copy();
+    dspt.resize(0,480);
+    image(dspt, 640, 0);
     coolLines(r);
   }
   if(mousePressed) drawThings(tempimg);
@@ -278,27 +290,36 @@ void draw() {
       
       if(getBubbleState(t, b)) {
         fill(0, 255, 0);
-        ellipse(sheetToCameraSpace(b.pos).x, sheetToCameraSpace(b.pos).y, 2, 2);
+        ellipse(1.2*sheetToCameraSpace(b.pos).x+640, 1.2*sheetToCameraSpace(b.pos).y, 2, 2);
       } else {
         fill(255, 0, 0);
-        ellipse(sheetToCameraSpace(b.pos).x, sheetToCameraSpace(b.pos).y, 2, 2);
+        ellipse(1.2*sheetToCameraSpace(b.pos).x+640, 1.2*sheetToCameraSpace(b.pos).y, 2, 2);
       }
       
     }
-    if(ready){
+    if(ready && input != ""){
       scansDone++;
       //saveTable(bubbleStates, "C:/Users/Alnis/Documents/robotics/scanner/converter/data/bubblestates.csv");
       saveTable(bubbleStates, "data/bubblestates.csv");
       println("saved! " + scansDone);
-      saveNewRowAndClear(0);
+      flashAlpha = 127;
+      saveNewRowAndClear(Integer.parseInt(input));
     }
     ready = false;
   }
   //background(255, 255-saveAlpha);
   //saveAlpha -= 50;
   //if(saveAlpha < 0) saveAlpha = 0;
+  //fill(0);
+  fill(0,255,0);
+  text(input, 5, height-8);
+  fill(0.,255.,0.,flashAlpha);
+  noStroke();
+  rect(0,0,width,height);
+  flashAlpha *= .5;
 }
 void keyPressed() {
+  //if(key == '') println(key);
   switch(key) {
     /*
     case 'q': globalerror++;
@@ -318,12 +339,27 @@ void keyPressed() {
               break;
     case 'd': tbx++;
               break;
-    case 'g': ready = true;
+    case '\n':ready = true;
+              //input = "";
               //saveAlpha = 255;
               break;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9': input = input + key;
+              break;
+    case '': if(input.length() > 0) input = input.substring(0,input.length()-1);
+              break;
   }
+  //println(input);
   //println(globalerror, globalminimum);
-  println(tbx, tby);
+  //println(tbx, tby);
 }
 void mousePressed() {
   mousePressedX = mouseX;

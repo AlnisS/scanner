@@ -21,11 +21,21 @@ void parseStates(Table bubbles, TableRow states, TableRow result) {
   }
 }
 void saveNewRowAndClear(int scoreID) {
-  saveRow(scoreID);
+  try {
+    saveRow(scoreID);
+  } catch(Exception ex) {
+    input = "";
+  }
   bubbleStates.clearRows();
   scansDone = 0;
+  input = "";
 }
 void saveRow(int scoreID) {
+  println(scoreID, scoreIDs.getRowCount());
+  if(scoreID < 0 || scoreID >= scoreIDs.getRowCount()) {
+    flashAlpha = 0;
+    return;
+  }
   TableRow tmprow = outData.addRow();
   tmprow.setInt("match",scoreIDs.getInt(scoreID,"match"));
   tmprow.setInt("team",scoreIDs.getInt(scoreID,"team"));

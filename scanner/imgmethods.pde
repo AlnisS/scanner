@@ -54,25 +54,43 @@ boolean validatePoint(PImage img, PVector v) {
   try {
     img.loadPixels();
     int i = 0;
-    
-    while(isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {}
-    while(!isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {}
-    while(isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {}
+    boolean res = true;
+    while(isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {
+      if(i > 50) {
+        res = false;
+        break;
+      }
+    }
+    while(!isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {
+      if(i > 50) {
+        res = false;
+        break;
+      }
+    }
+    while(isBlack(img.pixels[int(v.y+i)*img.width+int(v.x+i++)])) {
+      if(i > 50) {
+        res = false;
+        break;
+      }
+    }
     int j = i*5/2;
     //line(v.x-j/2, v.y-j/2, v.x+j/2, v.y+j/2);
     //line(v.x, v.y, v.x+i, v.y+i);
-    boolean res = true;
+    
     //ellipseMode(RADIUS);
     //noFill();
     //ellipse(v.x, v.y, j, j);
-    for(float t = 0; t < TWO_PI; t += PI * .05) {
+    for(float t = 0; t < TWO_PI && res; t += PI * .05) {
       float r = 0;
       while(isBlack(img.pixels[int(v.y+r*sin(t))*img.width+int(v.x+r++*cos(t))])&&r<j) {}
       while(!isBlack(img.pixels[int(v.y+r*sin(t))*img.width+int(v.x+r++*cos(t))])&&r<j) {}
       while(isBlack(img.pixels[int(v.y+r*sin(t))*img.width+int(v.x+r++*cos(t))])&&r<j) {}
       if(!(r<j)) res = false;
       while(!isBlack(img.pixels[int(v.y+r*sin(t))*img.width+int(v.x+r++*cos(t))])&&r<j) {}
-      if(r<j) res = false;
+      if(r<j) {
+        res = false;
+        break;
+      }
       /*
       float xo = int(.5*i*cos(r));
       float yo = int(.5*i*sin(r));
