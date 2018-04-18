@@ -20,17 +20,18 @@ void parseStates(Table bubbles, TableRow states, TableRow result) {
     }
   }
 }
-void saveNewRowsAndClear() {
-  addRows();
+void saveNewRowAndClear(int scoreID) {
+  saveRow(scoreID);
   bubbleStates.clearRows();
   scansDone = 0;
 }
-void addRows() {
-  for(TableRow row: bubbleStates.rows()) {
-    TableRow tmprow = outData.addRow();
-    parseStates(bubbleTemplate, row, tmprow);
-    println(outData.getRowCount());
-  }
+void saveRow(int scoreID) {
+  TableRow tmprow = outData.addRow();
+  tmprow.setInt("match",scoreIDs.getInt(scoreID,"match"));
+  tmprow.setInt("team",scoreIDs.getInt(scoreID,"team"));
+  tmprow.setString("color",scoreIDs.getString(scoreID,"color"));
+  parseStates(bubbleTemplate, bubbleStates.getRow(0), tmprow);
+  println(outData.getRowCount());
   saveTable(outData, "data/matchdata.csv");
   println("saved!");
 }

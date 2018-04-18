@@ -6,6 +6,7 @@ Bubble bubbles[];
 Table bubbleTemplate;
 Table bubbleStates;
 Table outData;
+Table scoreIDs;
 
 int saveAlpha = 0;
 boolean ready = false;
@@ -22,7 +23,7 @@ void setup() {
   //delay(10000);
   println(sheetToCameraSpace(new PVector(14, 9)).x, sheetToCameraSpace(new PVector(14, 9)).y);
   bubbleTemplate = loadTable("bubbles.csv", "header");
-  
+  scoreIDs = loadTable("scoreIDs.csv", "header");
   bubbleStates = new Table();
   for(int i = 0; i < bubbleTemplate.getRowCount(); i++) {
     bubbleStates.addColumn();
@@ -289,7 +290,7 @@ void draw() {
       //saveTable(bubbleStates, "C:/Users/Alnis/Documents/robotics/scanner/converter/data/bubblestates.csv");
       saveTable(bubbleStates, "data/bubblestates.csv");
       println("saved! " + scansDone);
-      saveNewRowsAndClear();
+      saveNewRowAndClear(0);
     }
     ready = false;
   }
