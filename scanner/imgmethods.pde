@@ -5,7 +5,19 @@ boolean getBubbleState(PImage img, Bubble b) {
 PVector sheetToCameraSpace(PVector v) {
   return new PVector((v.x+.5)*400/18, (v.y+.5)*400/12);
 }
-
+float getAverageChannelSum(PImage img, PVector v, int r) {
+  img.loadPixels();
+  float acc = 0;
+  for(int x = int(v.x) - r; x < int(v.x) + r; x++) {
+    for(int y = int(v.y) - r; y < int(v.y) + r; y++) {
+      color c = img.pixels[y*img.width + x];
+      acc += red(c);
+      acc += blue(c);
+      acc += green(c);
+    }
+  }
+  return acc / sq(2*r + 1);
+}
 void coolLines(PVector[] b) {
   for(int i = 0; i < 13; i++) {
     float p = float(i)/12;
@@ -249,7 +261,7 @@ boolean isBlack(color c) {
   return red(c)+green(c)+blue(c) < 230; //230
 }
 boolean isShaded(color c) {
-  return red(c)+green(c)+blue(c) < 300; 
+  return red(c)+green(c)+blue(c) < paper - 40; 
 }
 int marchBack(int p, color[] line) {
   p--;

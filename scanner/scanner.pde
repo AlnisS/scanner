@@ -8,6 +8,7 @@ Table bubbleStates;
 Table outData;
 Table scoreIDs;
 
+float paper = 400;
 float flashAlpha = 0;
 String input;
 int saveAlpha = 0;
@@ -266,6 +267,7 @@ void draw() {
     dspt.resize(0,480);
     image(dspt, 640, 0);
     coolLines(r);
+    paper = getAverageChannelSum(tempimg, new PVector((r[0].x + r[3].x)*.5, (r[0].y + r[3].y)*.5), 5);
   }
   if(mousePressed) drawThings(tempimg);
   text(mouseX, 10, 10);
