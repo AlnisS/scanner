@@ -5,6 +5,7 @@ Capture cam;
 Bubble bubbles[];
 Table bubbleTemplate;
 Table bubbleStates;
+Table outData;
 
 int saveAlpha = 0;
 boolean ready = false;
@@ -26,7 +27,7 @@ void setup() {
   for(int i = 0; i < bubbleTemplate.getRowCount(); i++) {
     bubbleStates.addColumn();
   }
-  
+  setupOut();
   //bubbleStates.addRow();
   //bubbleStates.addRow();
   //bubbleStates.setInt(1,0,2);
@@ -285,8 +286,10 @@ void draw() {
     }
     if(ready){
       scansDone++;
+      //saveTable(bubbleStates, "C:/Users/Alnis/Documents/robotics/scanner/converter/data/bubblestates.csv");
       saveTable(bubbleStates, "data/bubblestates.csv");
       println("saved! " + scansDone);
+      saveNewRowsAndClear();
     }
     ready = false;
   }
