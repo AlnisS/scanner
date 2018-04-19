@@ -1,3 +1,17 @@
+boolean getBubbleState(PImage img, PVector bp) {
+  float o = sheetToCameraSpace(new PVector(.5, 0)).x;
+  float highest = 0;
+  if(getAverageChannelSum(img, new PVector(bp.x + o, bp.y), 6) > highest)
+    highest = getAverageChannelSum(img, new PVector(bp.x + o, bp.y), 6);
+  if(getAverageChannelSum(img, new PVector(bp.x - o, bp.y), 6) > highest)
+    highest = getAverageChannelSum(img, new PVector(bp.x - o, bp.y), 6);
+  if(getAverageChannelSum(img, new PVector(bp.x, bp.y + o), 6) > highest)
+    highest = getAverageChannelSum(img, new PVector(bp.x, bp.y + o), 6);
+  if(getAverageChannelSum(img, new PVector(bp.x, bp.y - o), 6) > highest)
+    highest = getAverageChannelSum(img, new PVector(bp.x, bp.y - o), 6);
+  return getAverageChannelSum(img, bp, 6) < highest - diff;
+}
+
 boolean getBubbleState(PImage img, Bubble b) {
   PVector cpos = sheetToCameraSpace(b.pos);
   return getBubbleState(img, cpos);
@@ -6,6 +20,11 @@ PVector sheetToCameraSpace(PVector v) {
   return new PVector((v.x+.5)*400/18, (v.y+.5)*400/12);
 }
 float getAverageChannelSum(PImage img, PVector v, int r) {
+  //ellipseMode(RADIUS);
+  //stroke(255);
+  //noFill();
+  //ellipse(1.2*v.x+640, v.y*1.2, r, r);
+  //rect(1.2*v.x+640 - r, v.y*1.2 - r, r*2, r*2);
   img.loadPixels();
   float acc = 0;
   for(int x = int(v.x) - r; x < int(v.x) + r; x++) {
@@ -16,6 +35,8 @@ float getAverageChannelSum(PImage img, PVector v, int r) {
       acc += green(c);
     }
   }
+  //fill(255);
+  //text(int(acc / sq(2*r + 1)), 1.2*v.x+640, v.y*1.2);
   return acc / sq(2*r + 1);
 }
 void coolLines(PVector[] b) {
@@ -48,9 +69,7 @@ PImage generateUndistort(PImage img, PVector[] b) {
   return result;
 }
 
-boolean getBubbleState(PImage img, PVector bp) {
-  return isShaded(img.get(int(bp.x), int(bp.y)));
-}
+
 
 int getCenterFromEdge(ArrayList<Integer> ls, int val) {
   int pos = ls.indexOf(val);
@@ -136,6 +155,7 @@ ArrayList<Integer> getHorizontalEdges(PImage img, int y) {
   return result;
 }
 ArrayList<Integer> getVerticalEdges(PImage img, int x) {
+  x = constrain(x, 1, img.width-1);
   ArrayList<Integer> result = new ArrayList<Integer>();
   img.loadPixels();
   for(int i = 1; i < img.height; i++) {
@@ -261,7 +281,13 @@ boolean isBlack(color c) {
   return red(c)+green(c)+blue(c) < 230; //230
 }
 boolean isShaded(color c) {
-  return red(c)+green(c)+blue(c) < paper - 40; 
+  return isShaded(sumChannels(c)); 
+}
+boolean isShaded(float f) {
+  return f < paper - 5;
+}
+float sumChannels(color c) {
+  return red(c)+green(c)+blue(c);
 }
 int marchBack(int p, color[] line) {
   p--;

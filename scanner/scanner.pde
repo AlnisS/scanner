@@ -8,6 +8,7 @@ Table bubbleStates;
 Table outData;
 Table scoreIDs;
 
+float diff = 46;
 float paper = 400;
 float flashAlpha = 0;
 String input;
@@ -263,8 +264,13 @@ void draw() {
     //  //drawPixelLine(1, 2*i+1.01, 399.1, 2*i+1.01, scan);
     //}
     t = generateUndistort(tempimg, r);
+    //t.filter(BLUR,6);
     PImage dspt = t.copy();
     dspt.resize(0,480);
+    //dspt.loadPixels();
+    //for(int i = 0; i < dspt.pixels.length; i++) {
+    //  dspt.pixels[i] = 255*int(isShaded(dspt.pixels[i]));
+    //}
     image(dspt, 640, 0);
     coolLines(r);
     paper = getAverageChannelSum(tempimg, new PVector((r[0].x + r[3].x)*.5, (r[0].y + r[3].y)*.5), 5);
@@ -315,6 +321,7 @@ void draw() {
   //fill(0);
   fill(0,255,0);
   text(input, 5, height-8);
+  text(diff, width-20, height-8);
   fill(0.,255.,0.,flashAlpha);
   noStroke();
   rect(0,0,width,height);
@@ -357,6 +364,10 @@ void keyPressed() {
     case '9': input = input + key;
               break;
     case '': if(input.length() > 0) input = input.substring(0,input.length()-1);
+              break;
+    case '+': diff +=4;
+              break;
+    case '-': diff -=4;
               break;
   }
   //println(input);

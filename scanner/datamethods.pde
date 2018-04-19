@@ -21,6 +21,7 @@ void parseStates(Table bubbles, TableRow states, TableRow result) {
   }
 }
 void saveNewRowAndClear(int scoreID) {
+  scoreID--;
   try {
     saveRow(scoreID);
   } catch(Exception ex) {
